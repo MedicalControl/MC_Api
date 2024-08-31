@@ -9,26 +9,21 @@ import { UnproccessableEntity } from "../exceptions/validation";
 import { SignUpSchema } from "../schemas";
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
-    try{
-        SignUpSchema.parse(req.body)
-        const {email, password , name} = req.body;
-    
-        let user = await prismaClient.user.findFirst({where: {email}})
-        if (user) 
-            next (new BadRequestException('User alreay exists!', ErrorCode.USER_ALREADY_EXIST))
-        
-        user = await prismaClient.user.create({
-            data: {
-                name, 
-                email, 
-                password:hashSync(password, 10)
-            }
-        })
-        res.json(user)
-    }catch(err: any){
-        next( new UnproccessableEntity(err?.issues, 'Unproccesable entity', ErrorCode.UNPORCCESSABLEENTITY ))
+    SignUpSchema.parse(req.body)
+    const {email, password , name} = req.body;
 
-    }
+    let user = await prismaClient.user.findFirst({where: {email}})
+    if (user) 
+        next (new BadRequestException('User alreay exists!', ErrorCode.USER_ALREADY_EXIST))
+    
+    user = await prismaClient.user.create({
+        data: {
+            name, 
+            email, 
+            password:hashSync(password, 10)
+        }
+    })
+    res.json(user)
 }
 
 export const login = async (req: Request, res: Response) => {
