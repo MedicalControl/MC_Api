@@ -12,7 +12,8 @@ export const errorHandler = (method: Function) => {
                 exception = err;
             }
             else{
-                exception = new InternalException('Something went wrong!', err, ErrorCode.INTERNALEXCEPTION)  
+                exception = new InternalException('Something went wrong!', err, ErrorCode.INTERNALEXCEPTION)
+                console.log(err)
             }
             next(exception)
         }
