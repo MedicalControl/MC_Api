@@ -5,9 +5,16 @@ import * as jwt from 'jsonwebtoken'
 import { JWT_ROUND, JWT_SECRET } from "../config";
 import { BadRequestException } from "../exceptions/bad-request";
 import { ErrorCode } from "../exceptions/root";
-import { UnproccessableEntity } from "../exceptions/validation";
 import { SignUpSchema } from "../schemas";
 import { NotFoundtException } from "../exceptions/not-found";
+import { User } from "@prisma/client";
+
+declare module 'express' {
+    interface Request {
+        user?: User;
+    }
+}
+
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
     SignUpSchema.parse(req.body)
@@ -18,15 +25,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
         next (new BadRequestException('User alreay exists!', ErrorCode.USER_ALREADY_EXIST))
     user = await prismaClient.user.create({
         data: {
-            name, 
             email, 
-            address, 
-            placeBirth, 
-            lastname, 
-            identityCard, 
-            bloodType,
-            number,
-            proffession,
             password:hashSync(password, JWT_ROUND)
         }
     })
@@ -49,5 +48,5 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 }
 
 export const me = async (req: Request, res: Response, next: NextFunction) => {
-    res.json("Hello")
+    res.json(req.user)
 }

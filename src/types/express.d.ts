@@ -1,8 +1,10 @@
-import { User } from "@prisma/client";
-import express from 'express'
+import { User } from '@prisma/client';
+import * as express from 'express';
 
-declare module "express" {
+declare global {
+  namespace Express {
     interface Request {
-        user?: User;
+      user?: User; // Ajusta el tipo según sea necesario
     }
+  }
 }
