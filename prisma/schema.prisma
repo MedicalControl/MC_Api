@@ -13,46 +13,121 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role{
+enum Role {
   USER
   ADMIN
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  password String
-  role Role @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  role      Role      @default(USER)
+  medical   medical[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
-  @@map("Test") 
+  @@map("Test")
 }
-
-model tratament {
-  id Int @id @default(autoincrement())
-  name String
-  unidad String
-  dosis Int 
-  Type String 
-  StartDate DateTime @default(now())
-  EndDate DateTime @updatedAt
-  @@map("tratament")
-}
-
 
 model consultation {
-  id Int @id @default(autoincrement())
+  id                  Int           @id @default(autoincrement())
   reasonsConsultation String
-  plan String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  plan                String
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  trataments          tratament[]
+  medicalRecordid     Int
+  medicalRecord       medicalRecord @relation(fields: [medicalRecordid], references: [id])
+
   @@map("consultation")
 }
 
+model tratament {
+  id             Int          @id @default(autoincrement())
+  name           String
+  unidad         String
+  dosis          Int
+  type           String
+  consultationId Int
+  consultation   consultation @relation(fields: [consultationId], references: [id])
+  startDate      DateTime     @default(now())
+  endDate        DateTime     @updatedAt
+
+  @@map("tratament")
+}
+
 model medicalRecord {
-  id Int @id @default(autoincrement())
-  num String 
+  id           Int            @id @default(autoincrement())
+  num          String
+  healthunitid Int
+  healthunit   healthunit     @relation(fields: [healthunitid], references: [id])
+  consultation consultation[]
 
   @@map("medicalRecord")
+}
+
+model healthunit {
+  id            Int             @id @default(autoincrement())
+  name          String
+  latitude      String
+  longitude     String
+  num           String
+  medical       medical[]
+  medicalRecord medicalRecord[]
+
+  @@map("healthunit")
+}
+
+model medical {
+  id           Int        @id @default(autoincrement())
+  name         String
+  lastname     String
+  healthunitid Int
+  userid       Int
+  specialityid Int
+  healthunit   healthunit @relation(fields: [healthunitid], references: [id])
+  user         User       @relation(fields: [userid], references: [id])
+  speciality   speciality @relation(fields: [specialityid], references: [id])
+
+  @@map("medical")
+}
+
+model speciality {
+  id      Int       @id @default(autoincrement())
+  name    String
+  medical medical[]
+
+  @@map("speciality")
+}
+
+model patient {
+  id         Int      @id @default(autoincrement())
+  idCard     String   @unique
+  name       String
+  lastname   String
+  address    String
+  inssnumber String
+  ocupation  String
+  birthDate  DateTime
+  sex        Boolean
+  number     String
+  bloodType  String @db.VarChar(3)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("patient")
+}
+
+model municipality {
+  id        Int     @id @default(autoincrement())
+  name      String
+  districid Int
+  distric   distric @relation(fields: [districid], references: [id])
+}
+
+model distric {
+  id           Int            @id @default(autoincrement())
+  name         String
+  municipality municipality[]
 }
