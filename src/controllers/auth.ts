@@ -15,7 +15,6 @@ declare module 'express' {
     }
 }
 
-
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
     SignUpSchema.parse(req.body)
     const {email, password , name, address, ocupation, bloodType, lastname, idCard, number, birthDate, inssnumber, sex, districtid, municipalityid} = req.body;
