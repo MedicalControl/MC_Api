@@ -7,11 +7,11 @@ import { BadRequestException } from "../exceptions/bad-request";
 import { ErrorCode } from "../exceptions/root";
 import { SignUpSchema } from "../schemas";
 import { NotFoundtException } from "../exceptions/not-found";
-import { User } from "@prisma/client";
+import { user } from "@prisma/client";
 
 declare module 'express' {
     interface Request {
-        user?: User;
+        user?: user;
     }
 }
 

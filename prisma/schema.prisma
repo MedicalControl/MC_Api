@@ -19,14 +19,14 @@ enum Role {
 }
 
 model user {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
   password  String
-  role      Role      @default(USER)
+  role      Role     @default(USER)
   medical   medical?
   patient   patient?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("user")
 }
@@ -62,10 +62,11 @@ model medicalRecord {
   id           Int            @id @default(autoincrement())
   num          String
   healthunitid Int
-  patientid Int @unique 
-  patient patient @relation(fields: [patientid], references: [id])
+  patientid    Int            @unique
+  patient      patient        @relation(fields: [patientid], references: [id])
   healthunit   healthunit     @relation(fields: [healthunitid], references: [id])
   consultation consultation[]
+
   @@map("medicalRecord")
 }
 
@@ -86,7 +87,7 @@ model medical {
   name         String
   lastname     String
   healthunitid Int
-  userid       Int @unique
+  userid       Int        @unique
   specialityid Int
   healthunit   healthunit @relation(fields: [healthunitid], references: [id])
   user         user       @relation(fields: [userid], references: [id])
@@ -104,8 +105,8 @@ model speciality {
 }
 
 model patient {
-  id             Int          @id @default(autoincrement())
-  idCard         String       @unique
+  id             Int            @id @default(autoincrement())
+  idCard         String         @unique
   name           String
   lastname       String
   address        String
@@ -114,16 +115,16 @@ model patient {
   birthDate      DateTime
   sex            Boolean
   number         String
-  bloodType      String       @db.VarChar(3)
+  bloodType      String         @db.VarChar(3)
   districid      Int
   municipalityid Int
-  userid         Int @unique
-  medicalRecord medicalRecord? @relation
-  user           user         @relation(fields: [userid], references: [id])
-  municipality   municipality @relation(fields: [municipalityid], references: [id])
-  distric        distric      @relation(fields: [districid], references: [id])
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  userid         Int            @unique
+  medicalRecord  medicalRecord? @relation
+  user           user           @relation(fields: [userid], references: [id])
+  municipality   municipality   @relation(fields: [municipalityid], references: [id])
+  distric        distric        @relation(fields: [districid], references: [id])
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 
   @@map("patient")
 }
