@@ -28,3 +28,31 @@ model User {
 
   @@map("Test") 
 }
+
+model tratament {
+  id Int @id @default(autoincrement())
+  name String
+  unidad String
+  dosis Int 
+  Type String 
+  StartDate DateTime @default(now())
+  EndDate DateTime @updatedAt
+  @@map("tratament")
+}
+
+
+model consultation {
+  id Int @id @default(autoincrement())
+  reasonsConsultation String
+  plan String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("consultation")
+}
+
+model medicalRecord {
+  id Int @id @default(autoincrement())
+  num String 
+
+  @@map("medicalRecord")
+}
