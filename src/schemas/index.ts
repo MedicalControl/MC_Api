@@ -1,15 +1,27 @@
 import {z} from 'zod'
 
 
+const dateSchema = z.string().superRefine((value, ctx) => {
+    if (isNaN(Date.parse(value))) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Invalid date format',
+      });
+    }
+  });
+
 export const SignUpSchema = z.object({
     name: z.string(),
     lastname: z.string(), 
     address: z.string(), 
     number: z.string().max(8),
     bloodType: z.string().max(3), 
-    placeBirth: z.string(),
-    proffession: z.string(),
-    identityCard: z.string(),
+    birthDate: dateSchema,
+    ocupation: z.string(),
+    idCard: z.string(),
     email: z.string().email(),
-    password: z.string().min(6)
+    password: z.string().min(6), 
+    inssnumber: z.string(), 
+    municipalityid: z.number(), 
+    districtid: z.number()
 })

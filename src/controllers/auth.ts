@@ -18,18 +18,40 @@ declare module 'express' {
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
     SignUpSchema.parse(req.body)
-    const {email, password , name, address, proffession, placeBirth, bloodType, lastname, identityCard, number} = req.body;
-
+    const {email, password , name, address, ocupation, bloodType, lastname, idCard, number, birthDate, inssnumber, sex, districtid, municipalityid} = req.body;
+    const birthDateC = new Date(birthDate)
     let user = await prismaClient.user.findFirst({where: {email}})
+    let patient;
     if (user) 
         next (new BadRequestException('User alreay exists!', ErrorCode.USER_ALREADY_EXIST))
-    user = await prismaClient.user.create({
+
+    patient = await prismaClient.patient.create({
         data: {
-            email, 
-            password:hashSync(password, JWT_ROUND)
+            name, 
+            lastname, 
+            address, 
+            birthDate: birthDateC,
+            bloodType, 
+            ocupation,
+            inssnumber, 
+            idCard,
+            sex, 
+            number, 
+            user: {
+                create: {
+                    password, 
+                    email
+                }
+            }, 
+            municipality: {
+                connect: {id: municipalityid}
+            }, 
+            district: {
+                connect: {id: districtid}
+            }
         }
     })
-    res.json(user)
+    res.json(patient)
 }
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {

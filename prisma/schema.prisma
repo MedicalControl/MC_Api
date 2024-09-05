@@ -122,7 +122,7 @@ model patient {
   medicalRecord  medicalRecord? @relation
   user           user           @relation(fields: [userid], references: [id])
   municipality   municipality   @relation(fields: [municipalityid], references: [id])
-  distric        distric        @relation(fields: [districid], references: [id])
+  district        distric        @relation(fields: [districid], references: [id])
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
 
@@ -142,4 +142,6 @@ model distric {
   name         String
   municipality municipality[]
   patient      patient[]
+
+  @@map("distric")
 }
