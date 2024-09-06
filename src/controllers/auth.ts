@@ -6,7 +6,7 @@ import { JWT_ROUND, JWT_SECRET } from "../config";
 import { BadRequestException } from "../exceptions/bad-request";
 import { ErrorCode } from "../exceptions/root";
 import { SignUpSchema } from "../schemas";
-import { NotFoundtException } from "../exceptions/not-found";
+import { NotFoundException } from "../exceptions/not-found";
 import { user } from "@prisma/client";
 
 declare module 'express' {
@@ -58,14 +58,14 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
     let user = await prismaClient.user.findFirst({where: {email}})
     if (!user) 
-        throw  new NotFoundtException('User not found', ErrorCode.USER_NOT_FOUND)
+        throw  new NotFoundException('User not found', ErrorCode.USER_NOT_FOUND)
     if (!compareSync(password, user.password))
         throw new BadRequestException('Incorrect password!', ErrorCode.INCORRECT_PASSWORD)
     const token = jwt.sign({
         userId: user.id,
     }, JWT_SECRET)
 
-    res.json({user, token})
+    res.json({token})
 }
 
 export const me = async (req: Request, res: Response, next: NextFunction) => {
