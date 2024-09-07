@@ -1,0 +1,10 @@
+{
+    "medicine": [
+        {
+            "name": "Paracetamol", 
+            "dosis": 2, 
+            "type": "Jarabe", 
+            "consultationid": 1
+        }
+    ]
+}
