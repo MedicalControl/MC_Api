@@ -8,3 +8,14 @@ rootRouter.use('/auth', authRoutes)
 rootRouter.use('/medicine', medicineRoutes)
 
 export default rootRouter;
+
+
+/**
+ * @swagger
+ * components: 
+ *   securitySchemes: 
+ *     apiAuth: 
+ *        type: apiKey
+ *        in: header
+ *        name: authorization
+ */

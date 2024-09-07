@@ -4,7 +4,8 @@ import rootRouter from './routes'
 import { PrismaClient } from '@prisma/client'
 import { errrorMidleware } from './middlewares/errors'
 import { SignUpSchema } from './schemas'
-
+import swaggerUi from 'swagger-ui-express'
+import swaggerSpec from './documentation/swagger'
 const app:Express = express()
 
 app.use(express.json())
@@ -16,4 +17,5 @@ export const prismaClient = new PrismaClient({
 })
 
 app.use(errrorMidleware)
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 app.listen(PORT, () => {console.log('App workinh on port 3000')})
