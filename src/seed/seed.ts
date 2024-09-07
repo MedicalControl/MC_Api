@@ -6,9 +6,8 @@ import { ErrorCode } from "../exceptions/root";
 export async function seed() {
     try {
         const countDepartment = await prismaClient.distric.count();
+        const countUser = await prismaClient.user.count();
         if (countDepartment === 0) {
-            console.log('The tables are empty');
-
             const data = JSON.parse(fs.readFileSync('src/seed/data_departments.json', 'utf-8'));
             const departments = data.departments;
 
@@ -30,6 +29,39 @@ export async function seed() {
             console.log('Data has been seeded successfully');
         } else {
             console.log("The tables aren't empty");
+        }
+
+        if (countUser == 0) {
+            const data = JSON.parse(fs.readFileSync('src/seed/data_user.json', 'utf-8'));
+            for (const user of data) {
+
+                const patient = await prismaClient.patient.create({
+                    data: {
+                        name: user.name,
+                        lastname: user.lastname,
+                        address: user.address,
+                        birthDate: user.birthDate,
+                        bloodType: user.bloodType,
+                        ocupation: user.ocupation,
+                        inssnumber: user.inssnumber,
+                        idCard: user.idCard,
+                        sex: user.sex,
+                        number: user.number,
+                        user: {
+                            create: {
+                                password: user.password,
+                                email: user.email
+                            }
+                        },
+                        municipality: {
+                            connect: { id: user.municipalityid }
+                        },
+                        district: {
+                            connect: { id: user.districtid }
+                        }
+                    }
+                })
+            }
         }
     } catch (err) {
         throw new InternalException("Some failed", err, ErrorCode.INTERNALEXCEPTION);
