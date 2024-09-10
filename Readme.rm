@@ -1,28 +1,26 @@
-# Medical Control API
+# Medical Control API 🚑
 
-## Descripción
+Medical Control es un sistema de gestión médica que facilita el control de consultas, emergencias, resultados de laboratorio y recordatorios de medicamentos. Además, permite el monitoreo en tiempo real de la frecuencia cardíaca y la temperatura del paciente, con datos visibles para el doctor en todo momento.
 
-Medical Control es un sistema diseñado para gestionar las gestiones médicas de los pacientes, como consultas, emergencias, resultados de laboratorio, recordatorios de medicamentos y seguimiento a través de chat. Además, cuenta con un dispositivo de monitoreo en tiempo real de frecuencia cardiaca y temperatura.
+## Tecnologías Utilizadas 🛠️
 
-## Tecnologías Utilizadas
-
-- **Node.js**: Plataforma de servidor que permite ejecutar JavaScript del lado del servidor.
-- **TypeScript**: Lenguaje de programación que extiende JavaScript, añadiendo tipos estáticos.
-- **Zod**: Librería para validación de esquemas de datos de manera sencilla y eficiente.
-- **Prisma**: ORM (Object-Relational Mapping) que facilita las interacciones con bases de datos.
+- **Node.js**: Plataforma de servidor basada en JavaScript.
+- **TypeScript**: Superset de JavaScript con tipos estáticos.
+- **Zod**: Librería para validación de esquemas de datos.
+- **Prisma**: ORM que facilita la interacción con la base de datos.
 - **PostgreSQL**: Sistema de gestión de bases de datos relacional.
 
-## Requisitos Previos
+## Requisitos Previos ✅
 
-Antes de empezar, asegúrate de tener instalado lo siguiente:
+Antes de comenzar, asegúrate de tener instalado lo siguiente:
 
 - [Node.js](https://nodejs.org/) >= 14.x
-- [npm](https://www.npmjs.com/) >= 6.x (viene con Node.js)
+- [npm](https://www.npmjs.com/) >= 6.x
 - [PostgreSQL](https://www.postgresql.org/) >= 12.x
 
-## Configuración del Proyecto
+## Instalación 🚀
 
-### 1. Clonar el Repositorio
+### 1. Clona el Repositorio
 
 ```bash
 git clone https://github.com/usuario/medical-control-api.git
