@@ -1,0 +1,29 @@
+# Medical Control API
+
+## Descripción
+
+Medical Control es un sistema diseñado para gestionar las gestiones médicas de los pacientes, como consultas, emergencias, resultados de laboratorio, recordatorios de medicamentos y seguimiento a través de chat. Además, cuenta con un dispositivo de monitoreo en tiempo real de frecuencia cardiaca y temperatura.
+
+## Tecnologías Utilizadas
+
+- **Node.js**: Plataforma de servidor que permite ejecutar JavaScript del lado del servidor.
+- **TypeScript**: Lenguaje de programación que extiende JavaScript, añadiendo tipos estáticos.
+- **Zod**: Librería para validación de esquemas de datos de manera sencilla y eficiente.
+- **Prisma**: ORM (Object-Relational Mapping) que facilita las interacciones con bases de datos.
+- **PostgreSQL**: Sistema de gestión de bases de datos relacional.
+
+## Requisitos Previos
+
+Antes de empezar, asegúrate de tener instalado lo siguiente:
+
+- [Node.js](https://nodejs.org/) >= 14.x
+- [npm](https://www.npmjs.com/) >= 6.x (viene con Node.js)
+- [PostgreSQL](https://www.postgresql.org/) >= 12.x
+
+## Configuración del Proyecto
+
+### 1. Clonar el Repositorio
+
+```bash
+git clone https://github.com/usuario/medical-control-api.git
+cd medical-control-api
