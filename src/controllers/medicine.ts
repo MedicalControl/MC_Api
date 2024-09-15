@@ -25,7 +25,7 @@ export const listMedicineToPatient = async (req: Request, res: Response) => {
     try {
         const user = req.user
         const MedicinePatient = await prismaClient.patient.findUnique({
-            where: { id: user?.id },
+            where: { id: 1 },
             include: {
                 medicalRecord: {
                     include: {

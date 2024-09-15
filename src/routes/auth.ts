@@ -14,7 +14,7 @@ export default authRoutes
 
 /**
  * @swagger
- * /api/signup/{district}:
+ * /api/district/Municipality/{district}:
  *   get:
  *     summary: List of medicine
  *     security:

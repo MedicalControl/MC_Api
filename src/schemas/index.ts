@@ -10,7 +10,7 @@ const dateSchema = z.string().superRefine((value, ctx) => {
     }
   });
 
-export const SignUpSchema = z.object({
+export const signUpSchema = z.object({
     name: z.string(),
     lastname: z.string(), 
     address: z.string(), 
@@ -24,4 +24,11 @@ export const SignUpSchema = z.object({
     inssnumber: z.string(), 
     municipalityid: z.number(), 
     districtid: z.number()
+})
+ 
+
+export const consultationSchema = z.object({
+  plan: z.string(), 
+  reasonsConsultation: z.string(), 
+  medicalRecordId: z.number()
 })

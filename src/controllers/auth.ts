@@ -5,7 +5,7 @@ import * as jwt from 'jsonwebtoken'
 import { JWT_ROUND, JWT_SECRET } from "../config";
 import { BadRequestException } from "../exceptions/bad-request";
 import { ErrorCode } from "../exceptions/root";
-import { SignUpSchema } from "../schemas";
+import { signUpSchema } from "../schemas";
 import { NotFoundException } from "../exceptions/not-found";
 import { user } from "@prisma/client";
 
@@ -16,7 +16,7 @@ declare module 'express' {
 }
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
-    SignUpSchema.parse(req.body)
+    signUpSchema.parse(req.body)
     const {email, password , name, address, ocupation, bloodType, lastname, idCard, number, birthDate, inssnumber, sex, districtid, municipalityid} = req.body;
     const birthDateC = new Date(birthDate)
     let user = await prismaClient.user.findFirst({where: {email}})
@@ -38,7 +38,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
             number, 
             user: {
                 create: {
-                    password, 
+                    password: hashSync(password, JWT_ROUND),
                     email
                 }
             }, 
@@ -57,6 +57,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     const {email, password} = req.body;
 
     let user = await prismaClient.user.findFirst({where: {email}})
+    console.log(user);
     if (!user) 
         throw  new NotFoundException('User not found', ErrorCode.USER_NOT_FOUND)
     if (!compareSync(password, user.password))
