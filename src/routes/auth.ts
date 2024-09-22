@@ -204,4 +204,4 @@ export default authRoutes
 authRoutes.post('/signup', errorHandler(signup))
 
 
-authRoutes.post('medical/signup', errorHandler(medical_create))
+authRoutes.post('/medical/signup', errorHandler(medical_create))

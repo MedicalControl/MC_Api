@@ -26,7 +26,14 @@ export const signUpSchema = z.object({
     districtid: z.number()
 })
  
-
+export const signupMedicalSchema = z.object({
+  name: z.string(), 
+  lastname: z.string(),
+  healthunitid: z.number(), 
+  specialityid: z.number(),
+  email: z.string().email(), 
+  password: z.string().min(6), 
+})
 export const consultationSchema = z.object({
   plan: z.string(), 
   reasonsConsultation: z.string(), 
