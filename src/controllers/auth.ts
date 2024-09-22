@@ -9,6 +9,7 @@ import { signUpSchema } from "../schemas";
 import { NotFoundException } from "../exceptions/not-found";
 import { user } from "@prisma/client";
 
+
 declare module "express" {
   interface Request {
     user?: user;
@@ -17,6 +18,35 @@ declare module "express" {
 
 const medicalRecord_Create = (municipalityid: any, districtid: any) =>
   String(municipalityid + districtid);
+
+export const medical_create = async (req: Request, res: Response, next: NextFunction) => {
+  const {name, lastname, healthunitid, specialityid, email, password} = req.body;
+  let user = await prismaClient.user.findFirst({where: {email}});
+  let medical;
+  if (user)
+      next(new BadRequestException("User already exists!", ErrorCode.USER_ALREADY_EXIST));
+
+  medical = await prismaClient.medical.create({
+    data:{
+      name, 
+      lastname, 
+      user: {
+        create: {
+          password: hashSync(password, JWT_ROUND),
+          email,
+        },
+      },
+      healthunit: {
+        connect: {id: healthunitid}
+      }, 
+      speciality: {
+        connect: {id: specialityid}
+      }
+    }
+  })
+  res.json(medical);
+};
+
 
 export const signup = async (
   req: Request,
@@ -50,7 +80,6 @@ export const signup = async (
         ErrorCode.USER_ALREADY_EXIST
       )
     );
-  const { healthunitid = 1 } = req.body;
   patient = await prismaClient.patient.create({
     data: {
       name,

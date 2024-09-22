@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { login, signup, me } from '../controllers/auth'
+import { login, signup, me, medical_create } from '../controllers/auth'
 import { errorHandler } from '../error-handler'
 import authMiddleware from '../middlewares/auth'
 
@@ -202,3 +202,6 @@ export default authRoutes
  *                   example: "Error al registrar el usuario."
  */
 authRoutes.post('/signup', errorHandler(signup))
+
+
+authRoutes.post('medical/signup', errorHandler(medical_create))
