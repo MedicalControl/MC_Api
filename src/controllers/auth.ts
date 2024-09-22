@@ -34,6 +34,7 @@ export const medical_create = async (req: Request, res: Response, next: NextFunc
         create: {
           password: hashSync(password, JWT_ROUND),
           email,
+          role: 'ADMIN'
         },
       },
       healthunit: {
@@ -41,7 +42,7 @@ export const medical_create = async (req: Request, res: Response, next: NextFunc
       }, 
       speciality: {
         connect: {id: specialityid}
-      }
+      }, 
     }
   })
   res.json(medical);
