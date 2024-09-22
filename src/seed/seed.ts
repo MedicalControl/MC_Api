@@ -7,6 +7,7 @@ export async function seed() {
     try {
         const countDepartment = await prismaClient.distric.count();
         const countUser = await prismaClient.user.count();
+        const countSpeciality = await prismaClient.speciality.count();
         if (countDepartment === 0) {
             const data = JSON.parse(fs.readFileSync('src/seed/data_departments.json', 'utf-8'));
             const departments = data.departments;
@@ -35,7 +36,7 @@ export async function seed() {
             const data = JSON.parse(fs.readFileSync('src/seed/data_user.json', 'utf-8'));
             for (const user of data) {
 
-                const patient = await prismaClient.patient.create({
+                await prismaClient.patient.create({
                     data: {
                         name: user.name,
                         lastname: user.lastname,
@@ -59,6 +60,17 @@ export async function seed() {
                         district: {
                             connect: { id: user.districtid }
                         }
+                    }
+                })
+            }
+        }
+        if (countSpeciality == 0){
+            const data = JSON.parse(fs.readFileSync('src/seed/data.json', 'utf-8'));
+            for (const specialty of data.specialty)
+            {
+                await prismaClient.speciality.create({
+                    data: {
+                        name: specialty.name
                     }
                 })
             }

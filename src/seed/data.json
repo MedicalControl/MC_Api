@@ -1,10 +1,21 @@
 {
     "medicine": [
         {
-            "name": "Paracetamol", 
-            "dosis": 2, 
-            "type": "Jarabe", 
+            "name": "Paracetamol",
+            "dosis": 2,
+            "type": "Jarabe",
             "consultationid": 1
+        }
+    ],
+    "specialty": [
+        {
+            "name": "Cirujano"
+        },
+        {
+            "name": "Cardiologo"
+        },
+        {
+            "name": "Dermatologo"
         }
     ]
 }
