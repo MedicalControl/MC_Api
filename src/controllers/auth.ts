@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, response, Response } from "express";
 import { prismaClient } from "..";
 import { hashSync, compareSync } from "bcrypt";
 import * as jwt from "jsonwebtoken";
@@ -109,6 +109,7 @@ export const signup = async (
   });
   res.json(patient);
 };
+
 
 export const login = async (
   req: Request,

@@ -1,7 +1,9 @@
-import { prismaClient } from "..";
+import { prismaClient } from "../../src";
 import fs from 'fs';
-import { InternalException } from "../exceptions/internal-exception";
-import { ErrorCode } from "../exceptions/root";
+import { InternalException } from "../../src/exceptions/internal-exception";
+import { ErrorCode } from "../../src/exceptions/root";
+import { hashSync } from 'bcrypt';
+import { JWT_ROUND } from "../../src/config";
 
 export async function seed() {
     try {
@@ -9,7 +11,7 @@ export async function seed() {
         const countUser = await prismaClient.user.count();
         const countSpeciality = await prismaClient.speciality.count();
         if (countDepartment === 0) {
-            const data = JSON.parse(fs.readFileSync('src/seed/data_departments.json', 'utf-8'));
+            const data = JSON.parse(fs.readFileSync('prisma/seed/data_departments.json', 'utf-8'));
             const departments = data.departments;
 
             for (const dept of departments) {
@@ -33,7 +35,7 @@ export async function seed() {
         }
 
         if (countUser == 0) {
-            const data = JSON.parse(fs.readFileSync('src/seed/data_user.json', 'utf-8'));
+            const data = JSON.parse(fs.readFileSync('prisma/seed/data_user.json', 'utf-8'));
             for (const user of data) {
 
                 await prismaClient.patient.create({
@@ -50,7 +52,7 @@ export async function seed() {
                         number: user.number,
                         user: {
                             create: {
-                                password: user.password,
+                                password: hashSync(user.password, JWT_ROUND),
                                 email: user.email
                             }
                         },
@@ -65,13 +67,11 @@ export async function seed() {
             }
         }
         if (countSpeciality == 0){
-            const data = JSON.parse(fs.readFileSync('src/seed/data.json', 'utf-8'));
+            const data = JSON.parse(fs.readFileSync('prisma/seed/data.json', 'utf-8'));
             for (const specialty of data.specialty)
             {
                 await prismaClient.speciality.create({
-                    data: {
-                        name: specialty.name
-                    }
+                    data: specialty
                 })
             }
         }
@@ -79,3 +79,10 @@ export async function seed() {
         throw new InternalException("Some failed", err, ErrorCode.INTERNALEXCEPTION);
     }
 }
+
+
+seed().then(() => {
+    console.log('seed was successful ');
+}).catch((err) => {
+    console.log('Err: ', err);
+})

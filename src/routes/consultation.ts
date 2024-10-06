@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { errorHandler } from "../error-handler";
+import { errorHandler } from "../exceptions/error-handler";
 import authMiddleware from "../middlewares/auth";
 import adminMiddleWare from "../middlewares/admin";
 import { createConsultation } from "../controllers/consultation";

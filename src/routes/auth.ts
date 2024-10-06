@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { login, signup, me, medical_create } from '../controllers/auth'
-import { errorHandler } from '../error-handler'
+import { errorHandler } from '../exceptions/error-handler'
 import authMiddleware from '../middlewares/auth'
 
 
