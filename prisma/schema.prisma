@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,135 +7,357 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  USER
-  ADMIN
+model citas {
+  idcitas       Int             @id @default(autoincrement())
+  fechacita     DateTime        @db.Date
+  idconsulta    Int
+  consulta      consulta        @relation(fields: [idconsulta], references: [idconsulta], onDelete: NoAction, onUpdate: NoAction, map: "citas_consulta_fk")
+  hojaevolucion hojaevolucion[]
 }
 
-model user {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  role      Role     @default(USER)
-  medical   medical?
-  patient   patient?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("user")
+model consulta {
+  idconsulta           Int                    @id @default(autoincrement())
+  idexpediente         Int
+  idmedico             Int
+  fecha                DateTime               @db.Date
+  motivoconsulta       String                 @db.VarChar
+  historiaenfernedad   String                 @db.VarChar
+  citas                citas[]
+  expediente           expediente             @relation(fields: [idexpediente], references: [idexpediente], onDelete: NoAction, onUpdate: NoAction)
+  medico               medico                 @relation(fields: [idmedico], references: [idmedico], onDelete: NoAction, onUpdate: NoAction)
+  consultasignovitales consultasignovitales[]
+  hojaevolucion        hojaevolucion[]
+  ordenexamen          ordenexamen[]
+  recetaMedica         recetaMedica[]
 }
 
-model consultation {
-  id                  Int           @id @default(autoincrement())
-  reasonsConsultation String
-  plan                String
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
-  trataments          tratament[]
-  medicalRecordid     Int
-  medicalRecord       medicalRecord @relation(fields: [medicalRecordid], references: [id])
-
-  @@map("consultation")
+model consultasignovitales {
+  idconsultasignovital Int                @id @default(autoincrement())
+  idconsulta           Int
+  idpacientesignovital Int
+  consulta             consulta           @relation(fields: [idconsulta], references: [idconsulta], onDelete: NoAction, onUpdate: NoAction)
+  pacientesignovital   pacientesignovital @relation(fields: [idpacientesignovital], references: [idpacientesignovital], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model tratament {
-  id             Int          @id @default(autoincrement())
-  name           String
-  unidad         String
-  dosis          Int
-  type           String
-  consultationId Int
-  consultation   consultation @relation(fields: [consultationId], references: [id])
-  startDate      DateTime     @default(now())
-  endDate        DateTime     @updatedAt
-
-  @@map("tratament")
+model departamento {
+  iddepartamento     Int         @id @default(autoincrement())
+  nombredepartamento String      @db.VarChar(15)
+  municipio          municipio[]
 }
 
-model medicalRecord {
-  id           Int            @id @default(autoincrement())
-  num          String
-  healthunitid Int
-  patientid    Int            @unique
-  patient      patient        @relation(fields: [patientid], references: [id])
-  healthunit   healthunit     @relation(fields: [healthunitid], references: [id])
-  consultation consultation[]
-
-  @@map("medicalRecord")
+model dosis {
+  iddosis       Int         @id @default(autoincrement())
+  numerodosis   Int
+  fecha         DateTime    @db.Date
+  idvacuna      Int
+  idunidadsalud Int
+  idmedico      Int
+  idexpediente  Int
+  expediente    expediente  @relation(fields: [idexpediente], references: [idexpediente], onDelete: NoAction, onUpdate: NoAction, map: "dosis_expediente_fk")
+  unidadsalud   unidadsalud @relation(fields: [idunidadsalud], references: [idunidadsalud], onDelete: NoAction, onUpdate: NoAction)
+  vacunas       vacunas     @relation(fields: [idvacuna], references: [idvacuna], onDelete: NoAction, onUpdate: NoAction, map: "dosis_idvacunacion_fkey")
+  medico        medico      @relation(fields: [idmedico], references: [idmedico], onDelete: NoAction, onUpdate: NoAction, map: "dosis_medico_fk")
 }
 
-model healthunit {
-  id            Int             @id @default(autoincrement())
-  name          String
-  latitude      String
-  longitude     String
-  num           String
-  medical       medical[]
-  medicalRecord medicalRecord[]
-
-  @@map("healthunit")
+model emergencia {
+  idemergencia       Int        @id @default(autoincrement())
+  vehiculomotorizado Int?
+  otrotransporte     Int?
+  caida              Int?
+  maquinaria         Int?
+  efectostardios     Int?
+  fenomenonatural    Int?
+  asaltoagrecion     Int?
+  intentosuicidio    Int?
+  incendioexplosion  Int?
+  otra               Int?
+  trabajo            Int?
+  vivienda           Int?
+  centroestudio      Int?
+  centromedico       Int?
+  viapublica         Int?
+  deportedive        Int?
+  otrolugar          Int?
+  desconocido        Int?
+  fecha              DateTime?  @db.Date
+  hora               DateTime?  @db.Time(6)
+  resumenclinico     String?    @db.VarChar(100)
+  examenfisico       String?    @db.VarChar(100)
+  diagnostico        String?    @db.VarChar(100)
+  planes             String?    @db.VarChar(100)
+  medica             Int?
+  quirurgica         Int?
+  ginecoobstetrica   Int?
+  otraurgencia       Int?
+  alta               Int?
+  facellio           Int?
+  abandono           Int?
+  idexpediente       Int
+  idmedico           Int
+  expediente         expediente @relation(fields: [idexpediente], references: [idexpediente], onDelete: NoAction, onUpdate: NoAction, map: "emergencia_expediente_fk")
+  medico             medico     @relation(fields: [idmedico], references: [idmedico], onDelete: NoAction, onUpdate: NoAction, map: "emergencia_medico_fk")
 }
 
-model medical {
-  id           Int        @id @default(autoincrement())
-  name         String
-  lastname     String
-  healthunitid Int
-  userid       Int        @unique
-  specialityid Int
-  healthunit   healthunit @relation(fields: [healthunitid], references: [id])
-  user         user       @relation(fields: [userid], references: [id])
-  speciality   speciality @relation(fields: [specialityid], references: [id])
-
-  @@map("medical")
+model enfermedad {
+  idenfermedad              Int                         @id @default(autoincrement())
+  idtipoenfermedad          Int
+  nombreenfermedad          String                      @db.VarChar(50)
+  tipoenfermedad            tipoenfermedad              @relation(fields: [idtipoenfermedad], references: [idtipoenfermedad], onDelete: NoAction, onUpdate: NoAction)
+  historiaclinicaenfermedad historiaclinicaenfermedad[]
+  vacunaenfermedad          vacunaenfermedad[]
 }
 
-model speciality {
-  id      Int       @id @default(autoincrement())
-  name    String
-  medical medical[]
-
-  @@map("speciality")
+model especialidad {
+  idespecialidad     Int      @id @default(autoincrement())
+  nombreespecialidad String   @db.VarChar(50)
+  medico             medico[]
 }
 
-model patient {
-  id             Int            @id @default(autoincrement())
-  idCard         String         @unique
-  name           String
-  lastname       String
-  address        String
-  inssnumber     String
-  ocupation      String
-  birthDate      DateTime
-  sex            Boolean
-  number         String
-  bloodType      String         @db.VarChar(3)
-  districid      Int
-  municipalityid Int
-  userid         Int            @unique
-  medicalRecord  medicalRecord? @relation
-  user           user           @relation(fields: [userid], references: [id])
-  municipality   municipality   @relation(fields: [municipalityid], references: [id])
-  district        distric        @relation(fields: [districid], references: [id])
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-
-  @@map("patient")
+model examen {
+  idexamen     Int           @id @default(autoincrement())
+  nombreexamen String        @db.VarChar(50)
+  ordenexamen  ordenexamen[]
 }
 
-model municipality {
-  id        Int       @id @default(autoincrement())
-  name      String
-  districid Int
-  distric   distric   @relation(fields: [districid], references: [id])
-  patient   patient[]
+model expediente {
+  idexpediente     Int                @id @default(autoincrement())
+  numeroexpediente String             @db.VarChar(25)
+  idpaciente       Int
+  idunidadsalud    Int
+  consulta         consulta[]
+  dosis            dosis[]
+  emergencia       emergencia[]
+  pacientes        pacientes          @relation(fields: [idpaciente], references: [idpaciente], onDelete: NoAction, onUpdate: NoAction)
+  unidadsalud      unidadsalud        @relation(fields: [idunidadsalud], references: [idunidadsalud], onDelete: NoAction, onUpdate: NoAction, map: "expediente_unidadsalud_fk")
+  historialclinico historialclinico[]
+  vacunas          vacunas[]
 }
 
-model distric {
-  id           Int            @id @default(autoincrement())
-  name         String
-  municipality municipality[]
-  patient      patient[]
+model historiaclinicaenfermedad {
+  idhistoriaclinicaenfermedad Int              @id @default(autoincrement())
+  idhistoriaclinica           Int
+  idenfermedad                Int
+  enfermedad                  enfermedad       @relation(fields: [idenfermedad], references: [idenfermedad], onDelete: NoAction, onUpdate: NoAction)
+  historialclinico            historialclinico @relation(fields: [idhistoriaclinica], references: [idhistorialclinico], onDelete: NoAction, onUpdate: NoAction)
+}
 
-  @@map("distric")
+model historialclinico {
+  idhistorialclinico                    Int                         @id @default(autoincrement())
+  motivoconsulta                        String?                     @db.VarChar(50)
+  horassue_o                            Int?                        @map("horassueño")
+  actividadfisica                       String?                     @db.VarChar(50)
+  alimentacion                          String?                     @db.VarChar(50)
+  tabaco                                String?                     @db.VarChar(50)
+  alcohol                               String?                     @db.VarChar(50)
+  drogas                                String?                     @db.VarChar(50)
+  farmacos                              String?                     @db.VarChar(50)
+  historiaenfermedadactual              String?                     @db.VarChar(50)
+  enfermedadesinfectocontagiosasprevias String?                     @db.VarChar(100)
+  enfermedadescronicas                  String?                     @db.VarChar(100)
+  cirugiaspreviasrealizadas             String?                     @db.VarChar(100)
+  hospitalizaciones                     String?                     @db.VarChar(50)
+  aspectogeneral                        String?                     @db.VarChar(150)
+  pielymucosas                          String?                     @db.VarChar(150)
+  cabezaycuello                         String?                     @db.VarChar(300)
+  torax                                 String?                     @db.VarChar(300)
+  idexpediente                          Int
+  historiaclinicaenfermedad             historiaclinicaenfermedad[]
+  expediente                            expediente                  @relation(fields: [idexpediente], references: [idexpediente], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model hojaevolucion {
+  idevolucion        Int      @id(map: "hojaevolucion_pk")
+  idconsulta         Int
+  idcita             Int
+  problemasevolucion String   @db.VarChar
+  planes             String?  @db.VarChar
+  citas              citas    @relation(fields: [idcita], references: [idcitas], onDelete: NoAction, onUpdate: NoAction, map: "hojaevolucion_citas_fk")
+  consulta           consulta @relation(fields: [idconsulta], references: [idconsulta], onDelete: NoAction, onUpdate: NoAction, map: "hojaevolucion_consulta_fk")
+}
+
+model horario {
+  idhorario     Int         @id @default(autoincrement())
+  horarioinicio DateTime?   @db.Time(6)
+  horariosalida DateTime?   @db.Time(6)
+  dia           DateTime?   @db.Time(6)
+  idunidadsalud Int
+  unidadsalud   unidadsalud @relation(fields: [idunidadsalud], references: [idunidadsalud], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model medico {
+  idmedico       Int           @id @default(autoincrement())
+  idusuario      Int
+  idespecialidad Int?
+  nombre         String?       @db.VarChar(50)
+  apellido       String?       @db.VarChar(50)
+  idunidadsalud  Int
+  consulta       consulta[]
+  dosis          dosis[]
+  emergencia     emergencia[]
+  especialidad   especialidad? @relation(fields: [idespecialidad], references: [idespecialidad], onDelete: NoAction, onUpdate: NoAction)
+  usuario        usuario       @relation(fields: [idusuario], references: [idusuario], onDelete: NoAction, onUpdate: NoAction)
+  unidadsalud    unidadsalud   @relation(fields: [idunidadsalud], references: [idunidadsalud], onDelete: NoAction, onUpdate: NoAction, map: "medico_unidadsalud_fk")
+}
+
+model municipio {
+  idmunicipio     Int          @id @default(autoincrement())
+  iddepartamento  Int
+  nombremunicipio String       @db.VarChar(15)
+  departamento    departamento @relation(fields: [iddepartamento], references: [iddepartamento], onDelete: NoAction, onUpdate: NoAction)
+  pacientes       pacientes[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model nombretratamiento {
+  idtipotratamiento   Int
+  idnombretratamiento Int             @id(map: "nombretratamiento_pk")
+  descripcion         String?         @db.VarChar
+  tipotratamiento     tipotratamiento @relation(fields: [idtipotratamiento], references: [idtipotratamiento], onDelete: NoAction, onUpdate: NoAction, map: "nombretratamiento_tipotratamiento_fk")
+  tratamiento         tratamiento[]
+}
+
+model ordenexamen {
+  idordenexamen   Int      @id @default(autoincrement())
+  idexamen        Int
+  resultadoexamen String?  @db.VarChar(300)
+  estado          Boolean  @default(false)
+  idconsulta      Int
+  consulta        consulta @relation(fields: [idconsulta], references: [idconsulta], onDelete: NoAction, onUpdate: NoAction, map: "ordenexamen_consulta_fk")
+  examen          examen   @relation(fields: [idexamen], references: [idexamen], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model pacientes {
+  idpaciente         Int                  @id @default(autoincrement())
+  idmunicipio        Int
+  cedula             String               @db.VarChar(16)
+  nombres            String               @db.VarChar(50)
+  apellidos          String               @db.VarChar(50)
+  direccion          String               @db.VarChar(50)
+  profesion          String               @db.VarChar(50)
+  fechanacimiento    DateTime             @db.Date
+  lugarnacimiento    String               @db.VarChar(50)
+  sexo               String               @db.Char(1)
+  telefono           String               @db.VarChar(14)
+  tiposangre         String               @db.VarChar(2)
+  idusuario          Int
+  estadocivil        String               @db.VarChar
+  escolaridad        String               @db.VarChar
+  nombrepadre        String?              @db.VarChar
+  nombremadre        String?              @db.VarChar
+  expediente         expediente[]
+  municipio          municipio            @relation(fields: [idmunicipio], references: [idmunicipio], onDelete: NoAction, onUpdate: NoAction)
+  usuario            usuario              @relation(fields: [idusuario], references: [idusuario], onDelete: NoAction, onUpdate: NoAction, map: "pacientes_usuario_fk")
+  pacientesignovital pacientesignovital[]
+}
+
+model pacientesignovital {
+  idpacientesignovital Int                    @id @default(autoincrement())
+  idpaciente           Int
+  idsignovital         Int
+  consultasignovitales consultasignovitales[]
+  pacientes            pacientes              @relation(fields: [idpaciente], references: [idpaciente], onDelete: NoAction, onUpdate: NoAction)
+  signovital           signovital             @relation(fields: [idsignovital], references: [idsignovital], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model recetaMedica {
+  idrecetaMedica    Int                 @id(map: "tratamiento_pkey") @default(autoincrement())
+  unidadtratamiento String              @db.VarChar(50)
+  dosis             Int
+  fechainicio       DateTime            @db.Date
+  fechafin          DateTime            @db.Date
+  idconsulta        Int
+  consulta          consulta            @relation(fields: [idconsulta], references: [idconsulta], onDelete: NoAction, onUpdate: NoAction, map: "tratamiento_consulta_fk")
+  recetatratamiento recetatratamiento[]
+}
+
+model recetatratamiento {
+  idrecetatratamiento Int          @id(map: "recetatratamiento_pk")
+  idrecetamedica      Int
+  idtratamiento       Int
+  recetaMedica        recetaMedica @relation(fields: [idrecetamedica], references: [idrecetaMedica], onDelete: NoAction, onUpdate: NoAction, map: "recetatratamiento_recetamedica_fk")
+  tratamiento         tratamiento  @relation(fields: [idtratamiento], references: [idtratamiento], onDelete: NoAction, onUpdate: NoAction, map: "recetatratamiento_tratamiento_fk")
+}
+
+model rol {
+  idrol     Int       @id @default(autoincrement())
+  nombrerol String    @db.VarChar(15)
+  usuario   usuario[]
+}
+
+model signovital {
+  idsignovital       Int                  @id @default(autoincrement())
+  fecha              DateTime?            @db.Date
+  hora               DateTime?            @db.Time(6)
+  pulso              Int?
+  temperaturac       Int?
+  presionarterial    Int?
+  orina              String?              @db.VarChar(50)
+  liquidos           String?              @db.VarChar(50)
+  peso               String?              @db.VarChar(50)
+  respiracion        String?              @db.VarChar(50)
+  pacientesignovital pacientesignovital[]
+}
+
+model tipoenfermedad {
+  idtipoenfermedad Int          @id @default(autoincrement())
+  tipoenfermedad   String       @db.VarChar(30)
+  enfermedad       enfermedad[]
+}
+
+model tipotratamiento {
+  idtipotratamiento Int                 @id(map: "tipotratamiento_pk")
+  descripcion       String              @db.VarChar
+  nombretratamiento nombretratamiento[]
+}
+
+model tratamiento {
+  idtratamiento       Int                 @id(map: "tratamiento_pk")
+  idnombretratamiento Int
+  recetatratamiento   recetatratamiento[]
+  nombretratamiento   nombretratamiento   @relation(fields: [idnombretratamiento], references: [idnombretratamiento], onDelete: NoAction, onUpdate: NoAction, map: "tratamiento_nombretratamiento_fk")
+  tratamientohora     tratamientohora[]
+}
+
+model tratamientohora {
+  idtratamientohora Int         @id @default(autoincrement())
+  frecuencia        Int
+  idtratamiento     Int
+  tratamiento       tratamiento @relation(fields: [idtratamiento], references: [idtratamiento], onDelete: NoAction, onUpdate: NoAction, map: "tratamientohora_tratamiento_fk")
+}
+
+model unidadsalud {
+  idunidadsalud     Int          @id @default(autoincrement())
+  nombreunidadsalud String       @db.VarChar(100)
+  numero            String?      @db.VarChar
+  dosis             dosis[]
+  expediente        expediente[]
+  horario           horario[]
+  medico            medico[]
+}
+
+model usuario {
+  idusuario  Int         @id @default(autoincrement())
+  contrasena String      @db.VarChar(15)
+  correo     String      @db.VarChar(50)
+  idrol      Int
+  medico     medico[]
+  pacientes  pacientes[]
+  rol        rol         @relation(fields: [idrol], references: [idrol], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model vacunaenfermedad {
+  idvacunaenfermedad Int        @id(map: "vacunaenfermedad_pk")
+  idefermedad        Int
+  idvacuna           Int
+  enfermedad         enfermedad @relation(fields: [idefermedad], references: [idenfermedad], onDelete: NoAction, onUpdate: NoAction, map: "vacunaenfermedad_enfermedad_fk")
+  vacunas            vacunas    @relation(fields: [idvacuna], references: [idvacuna], onDelete: NoAction, onUpdate: NoAction, map: "vacunaenfermedad_vacunas_fk")
+}
+
+model vacunas {
+  idvacuna         Int                @id(map: "vacunacion_pkey") @default(autoincrement())
+  nombrevacuna     String?            @db.VarChar(50)
+  idexpediente     Int
+  dosis            dosis[]
+  vacunaenfermedad vacunaenfermedad[]
+  expediente       expediente         @relation(fields: [idexpediente], references: [idexpediente], onDelete: NoAction, onUpdate: NoAction, map: "vacunas_expediente_fk")
 }

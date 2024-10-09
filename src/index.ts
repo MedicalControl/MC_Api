@@ -5,7 +5,7 @@ import { PrismaClient } from '@prisma/client'
 import { errrorMidleware } from './middlewares/errors'
 import swaggerUi from 'swagger-ui-express'
 import swaggerSpec from './documentation/swagger'
-
+import {makePrediction} from './ia/tesorflow'
 
 
 const app:Express = express()
@@ -13,6 +13,7 @@ const app:Express = express()
 app.use(express.json())
 
 app.use('/api', rootRouter)
+
 
 export const prismaClient = new PrismaClient({
     log:['query']
