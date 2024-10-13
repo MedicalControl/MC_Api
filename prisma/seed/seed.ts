@@ -2,8 +2,7 @@ import { prismaClient } from "../../src";
 import fs from "fs";
 import { InternalException } from "../../src/exceptions/internal-exception";
 import { ErrorCode } from "../../src/exceptions/root";
-import { hashSync } from "bcrypt";
-import { JWT_ROUND } from "../../src/config";
+
 import { Prisma } from "@prisma/client";
 
 const especialidadesData: Prisma.especialidadCreateInput[] = [
@@ -120,11 +119,13 @@ export async function seed() {
     const countEspecialidades = await prismaClient.especialidad.count();
     const counttipomedicamento = await prismaClient.tipomedicamento.count();
     const countmedicamentos = await prismaClient.medicamento.count();
+    const counttiposExamenes = await prismaClient.tipoexamen.count();
 
-    if (countmedicamentos == 0)
-      for (const med of medicamentos)
-        await prismaClient.medicamento.create({ data: med });
-
+    if (counttiposExamenes == 0)
+      for (const tipExamen of tiposExamenes)
+        await prismaClient.tipoexamen.create({
+          data: tipExamen,
+        });
     if (countEspecialidades == 0)
       for (const espec of especialidadesData)
         await prismaClient.especialidad.create({
@@ -135,7 +136,10 @@ export async function seed() {
       for (const tipoMed of tipoMedicamentoData)
         await prismaClient.tipomedicamento.create({ data: tipoMed });
 
-    if (countDepartment === 2) {
+    if (countmedicamentos == 0)
+      for (const med of medicamentos)
+        await prismaClient.medicamento.create({ data: med });
+    if (countDepartment === 0) {
       const data = JSON.parse(
         fs.readFileSync("prisma/seed/data_departments.json", "utf-8")
       );
@@ -174,8 +178,10 @@ seed()
   .then(async () => {
     console.log("seed was successful ");
     await prismaClient.$disconnect();
+    process.exit(0);
   })
-  .catch(async () => {
+  .catch(async (err) => {
+    console.log(err);
     await prismaClient.$disconnect();
     process.exit(1);
   });

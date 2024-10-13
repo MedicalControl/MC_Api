@@ -153,12 +153,12 @@ model paciente {
   estadocivil     String            @db.VarChar(20)
   ocupacion       String            @db.VarChar(20)
   escolaridad     String            @db.VarChar(20)
-  apellidos       String            @db.VarChar
+  apellidos       String            @db.VarChar(50)
   religion        String            @db.VarChar(20)
   nombrepad       String?           @db.VarChar(50)
   nombremad       String?           @db.VarChar(50)
   fk_municipio    Int
-  nrocedula       String            @db.VarChar(30)
+  nrocedula       String            @db.VarChar(30) @unique
   agendacita      agendacita[]
   expediente      expediente[]
   municipio       municipio         @relation(fields: [fk_municipio], references: [pk_municipio], onDelete: NoAction, onUpdate: NoAction, map: "paciente_municipio_fk")
@@ -203,9 +203,9 @@ model tipomedicamento {
 }
 
 model usuario {
-  contrase_a      String            @map("contraseña") @db.VarChar(20)
+  contrasena      String            @map("contraseña") @db.VarChar(80)
   pk_usuario      Int               @id(map: "usuario_pk") @default(autoincrement())
-  correo          String            @db.VarChar(30)
+  correo          String            @db.VarChar(30) @unique
   rol             rol               @default(USER)
   administrador   administrador[]
   doctor          doctor[]
