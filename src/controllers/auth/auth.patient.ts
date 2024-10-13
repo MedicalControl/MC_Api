@@ -69,24 +69,24 @@ export const signup = async (
     );
   patient = await prismaClient.paciente.create({
     data: {
-      nombres: "Eliezer Jose",
-      apellidos: "Acuña Matus",
-      direccion: "ciudad sandino",
-      telefono: "00000000",
-      ocupacion: "desempleado",
-      estadocivil: "soltero",
-      sexo: true,
-      religion: "catolica",
-      escolaridad: "secundaria",
-      fechanacimiento: new Date("2005-03-20"), // Asegúrate de convertir la fecha a objeto Date si es necesario
-      nrocedula: "001-2003",
-      fk_municipio: 2, // Asegúrate de que este ID exista
+      nombres,
+      apellidos,
+      direccion,
+      telefono,
+      ocupacion,
+      estadocivil,
+      sexo,
+      religion,
+      escolaridad,
+      fechanacimiento: birthDateC,
+      nrocedula,
+      fk_municipio,
       pacienteusuario: {
         create: {
           usuario: {
             create: {
-              contrasena: hashSync("eliezerjose12", JWT_ROUND), // Asegúrate de que la contraseña esté correctamente hasheada
-              correo: "eacuna043@gmail.com",
+              contrasena: hashSync(contraseña, JWT_ROUND), // Asegúrate de que la contraseña esté correctamente hasheada
+              correo,
               rol: "USER"
             },
           },
