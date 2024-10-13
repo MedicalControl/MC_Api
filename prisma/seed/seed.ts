@@ -1,88 +1,181 @@
 import { prismaClient } from "../../src";
-import fs from 'fs';
+import fs from "fs";
 import { InternalException } from "../../src/exceptions/internal-exception";
 import { ErrorCode } from "../../src/exceptions/root";
-import { hashSync } from 'bcrypt';
+import { hashSync } from "bcrypt";
 import { JWT_ROUND } from "../../src/config";
+import { Prisma } from "@prisma/client";
+
+const especialidadesData: Prisma.especialidadCreateInput[] = [
+  {
+    nombre: "Oftalmologia",
+  },
+];
+
+const tiposExamenes: Prisma.tipoexamenCreateInput[] = [
+  {
+    nombre: "Examen de orina",
+  },
+  {
+    nombre: "Examen de sangre",
+  },
+  {
+    nombre: "Examen de heces",
+  },
+];
+
+const tipoMedicamentoData: Prisma.tipoexamenCreateInput[] = [
+  { nombre: "Tableta o pastilla" },
+  { nombre: "Jarabe" },
+  { nombre: "Inyeccion" },
+  { nombre: "Cremas" },
+];
+
+const medicamentos: Prisma.medicamentoCreateInput[] = [
+  {
+    nombre: "Paracetamol",
+    tipomedicamento: { connect: { pk_tipomedicamento: 1 } },
+  },
+  {
+    nombre: "Ibuprofeno",
+    tipomedicamento: { connect: { pk_tipomedicamento: 1 } },
+  },
+  {
+    nombre: "Amoxicilina",
+    tipomedicamento: { connect: { pk_tipomedicamento: 1 } },
+  },
+  {
+    nombre: "Azitromicina",
+    tipomedicamento: { connect: { pk_tipomedicamento: 1 } },
+  },
+  {
+    nombre: "Salbutamol",
+    tipomedicamento: { connect: { pk_tipomedicamento: 2 } },
+  },
+  {
+    nombre: "Clorfenamina",
+    tipomedicamento: { connect: { pk_tipomedicamento: 2 } },
+  },
+  {
+    nombre: "Ambroxol",
+    tipomedicamento: { connect: { pk_tipomedicamento: 2 } },
+  },
+  {
+    nombre: "Insulina",
+    tipomedicamento: { connect: { pk_tipomedicamento: 3 } },
+  },
+  {
+    nombre: "Penicilina",
+    tipomedicamento: { connect: { pk_tipomedicamento: 3 } },
+  },
+  {
+    nombre: "Ceftriaxona",
+    tipomedicamento: { connect: { pk_tipomedicamento: 3 } },
+  },
+  {
+    nombre: "Ibuprofeno en crema",
+    tipomedicamento: { connect: { pk_tipomedicamento: 4 } },
+  },
+  {
+    nombre: "Ketoconazol",
+    tipomedicamento: { connect: { pk_tipomedicamento: 4 } },
+  },
+  {
+    nombre: "Diclofenaco en gel",
+    tipomedicamento: { connect: { pk_tipomedicamento: 4 } },
+  },
+  {
+    nombre: "Loratadina",
+    tipomedicamento: { connect: { pk_tipomedicamento: 1 } },
+  },
+  {
+    nombre: "Ranitidina",
+    tipomedicamento: { connect: { pk_tipomedicamento: 1 } },
+  },
+  {
+    nombre: "Metformina",
+    tipomedicamento: { connect: { pk_tipomedicamento: 1 } },
+  },
+  {
+    nombre: "Omeprazol",
+    tipomedicamento: { connect: { pk_tipomedicamento: 1 } },
+  },
+  {
+    nombre: "Dexametasona",
+    tipomedicamento: { connect: { pk_tipomedicamento: 3 } },
+  },
+  {
+    nombre: "Bromhexina",
+    tipomedicamento: { connect: { pk_tipomedicamento: 2 } },
+  },
+  {
+    nombre: "Naproxeno",
+    tipomedicamento: { connect: { pk_tipomedicamento: 1 } },
+  },
+];
 
 export async function seed() {
-    try {
-        const countDepartment = await prismaClient.distric.count();
-        const countUser = await prismaClient.user.count();
-        const countSpeciality = await prismaClient.speciality.count();
-        if (countDepartment === 0) {
-            const data = JSON.parse(fs.readFileSync('prisma/seed/data_departments.json', 'utf-8'));
-            const departments = data.departments;
+  try {
+    const countDepartment = await prismaClient.departamento.count();
+    const countEspecialidades = await prismaClient.especialidad.count();
+    const counttipomedicamento = await prismaClient.tipomedicamento.count();
+    const countmedicamentos = await prismaClient.medicamento.count();
 
-            for (const dept of departments) {
-                const createdDepartment = await prismaClient.distric.create({
-                    data: {
-                        name: dept.name,
-                    },
-                });
-                for (const municipalityName of dept.municipalities) {
-                    await prismaClient.municipality.create({
-                        data: {
-                            name: municipalityName,
-                            districid: createdDepartment.id,
-                        },
-                    });
-                }
-            }
-            console.log('Data has been seeded successfully');
-        } else {
-            console.log("The tables aren't empty");
-        }
+    if (countmedicamentos == 0)
+      for (const med of medicamentos)
+        await prismaClient.medicamento.create({ data: med });
 
-        if (countUser == 0) {
-            const data = JSON.parse(fs.readFileSync('prisma/seed/data_user.json', 'utf-8'));
-            for (const user of data) {
+    if (countEspecialidades == 0)
+      for (const espec of especialidadesData)
+        await prismaClient.especialidad.create({
+          data: espec,
+        });
 
-                await prismaClient.patient.create({
-                    data: {
-                        name: user.name,
-                        lastname: user.lastname,
-                        address: user.address,
-                        birthDate: user.birthDate,
-                        bloodType: user.bloodType,
-                        ocupation: user.ocupation,
-                        inssnumber: user.inssnumber,
-                        idCard: user.idCard,
-                        sex: user.sex,
-                        number: user.number,
-                        user: {
-                            create: {
-                                password: hashSync(user.password, JWT_ROUND),
-                                email: user.email
-                            }
-                        },
-                        municipality: {
-                            connect: { id: user.municipalityid }
-                        },
-                        district: {
-                            connect: { id: user.districtid }
-                        }
-                    }
-                })
-            }
+    if (counttipomedicamento == 0)
+      for (const tipoMed of tipoMedicamentoData)
+        await prismaClient.tipomedicamento.create({ data: tipoMed });
+
+    if (countDepartment === 2) {
+      const data = JSON.parse(
+        fs.readFileSync("prisma/seed/data_departments.json", "utf-8")
+      );
+      const departments = data.departments;
+
+      for (const dept of departments) {
+        const createdDepartment = await prismaClient.departamento.create({
+          data: {
+            nombre: dept.nombre,
+          },
+        });
+
+        for (const municipalityName of dept.municipalities) {
+          await prismaClient.municipio.create({
+            data: {
+              nombre: municipalityName,
+              fk_departamento: createdDepartment.pk_departamento, // Usar el ID generado
+            },
+          });
         }
-        if (countSpeciality == 0){
-            const data = JSON.parse(fs.readFileSync('prisma/seed/data.json', 'utf-8'));
-            for (const specialty of data.specialty)
-            {
-                await prismaClient.speciality.create({
-                    data: specialty
-                })
-            }
-        }
-    } catch (err) {
-        throw new InternalException("Some failed", err, ErrorCode.INTERNALEXCEPTION);
+      }
+      console.log("Data has been seeded successfully");
+    } else {
+      console.log("The tables aren't empty");
     }
+  } catch (err) {
+    throw new InternalException(
+      "Some failed",
+      err,
+      ErrorCode.INTERNALEXCEPTION
+    );
+  }
 }
 
-
-seed().then(() => {
-    console.log('seed was successful ');
-}).catch((err) => {
-    console.log('Err: ', err);
-})
+seed()
+  .then(async () => {
+    console.log("seed was successful ");
+    await prismaClient.$disconnect();
+  })
+  .catch(async () => {
+    await prismaClient.$disconnect();
+    process.exit(1);
+  });

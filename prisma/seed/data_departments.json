@@ -1,8 +1,8 @@
 {
   "departments": [
     {
-      "id": 1,
-      "name": "Boaco",
+      "pk_departamento": 1,
+      "nombre": "Boaco",
       "municipalities": [
         "Boaco",
         "Camoapa",
@@ -13,8 +13,8 @@
       ]
     },
     {
-      "id": 2,
-      "name": "Carazo",
+      "pk_departamento": 2,
+      "nombre": "Carazo",
       "municipalities": [
         "Diriamba",
         "Dolores",
@@ -27,8 +27,8 @@
       ]
     },
     {
-      "id": 3,
-      "name": "Chinandega",
+      "pk_departamento": 3,
+      "nombre": "Chinandega",
       "municipalities": [
         "Chichigalpa",
         "Chinandega",
@@ -45,8 +45,8 @@
       ]
     },
     {
-      "id": 4,
-      "name": "Chontales",
+      "pk_departamento": 4,
+      "nombre": "Chontales",
       "municipalities": [
         "Acoyapa",
         "Comalapa",
@@ -62,8 +62,8 @@
       ]
     },
     {
-      "id": 5,
-      "name": "Costa Caribe Norte",
+      "pk_departamento": 5,
+      "nombre": "Costa Caribe Norte",
       "municipalities": [
         "Bilwi",
         "Bonanza",
@@ -76,8 +76,8 @@
       ]
     },
     {
-      "id": 6,
-      "name": "Costa Caribe Sur",
+      "pk_departamento": 6,
+      "nombre": "Costa Caribe Sur",
       "municipalities": [
         "Bluefields",
         "Corn Island",
@@ -91,8 +91,8 @@
       ]
     },
     {
-      "id": 7,
-      "name": "Estelí",
+      "pk_departamento": 7,
+      "nombre": "Estelí",
       "municipalities": [
         "Condega",
         "Estelí",
@@ -103,8 +103,8 @@
       ]
     },
     {
-      "id": 8,
-      "name": "Granada",
+      "pk_departamento": 8,
+      "nombre": "Granada",
       "municipalities": [
         "Diriá",
         "Diriomo",
@@ -113,8 +113,8 @@
       ]
     },
     {
-      "id": 9,
-      "name": "Jinotega",
+      "pk_departamento": 9,
+      "nombre": "Jinotega",
       "municipalities": [
         "El Cuá",
         "Jinotega",
@@ -127,8 +127,8 @@
       ]
     },
     {
-      "id": 10,
-      "name": "León",
+      "pk_departamento": 10,
+      "nombre": "León",
       "municipalities": [
         "Achuapa",
         "El Jicaral",
@@ -143,8 +143,8 @@
       ]
     },
     {
-      "id": 11,
-      "name": "Madriz",
+      "pk_departamento": 11,
+      "nombre": "Madriz",
       "municipalities": [
         "Las Sabanas",
         "Palacagüina",
@@ -158,8 +158,8 @@
       ]
     },
     {
-      "id": 12,
-      "name": "Managua",
+      "pk_departamento": 12,
+      "nombre": "Managua",
       "municipalities": [
         "Ciudad Sandino",
         "El Crucero",
@@ -173,8 +173,8 @@
       ]
     },
     {
-      "id": 13,
-      "name": "Masaya",
+      "pk_departamento": 13,
+      "nombre": "Masaya",
       "municipalities": [
         "Catarina",
         "La Concepción",
@@ -188,8 +188,8 @@
       ]
     },
     {
-      "id": 14,
-      "name": "Matagalpa",
+      "pk_departamento": 14,
+      "nombre": "Matagalpa",
       "municipalities": [
         "Ciudad Darío",
         "El Tuma-La Dalia",
@@ -206,8 +206,8 @@
       ]
     },
     {
-      "id": 15,
-      "name": "Nueva Segovia",
+      "pk_departamento": 15,
+      "nombre": "Nueva Segovia",
       "municipalities": [
         "Ciudad Antigua",
         "Dipilto",
@@ -223,8 +223,8 @@
       ]
     },
     {
-      "id": 16,
-      "name": "Rivas",
+      "pk_departamento": 16,
+      "nombre": "Rivas",
       "municipalities": [
         "Altagracia",
         "Belén",
@@ -239,8 +239,8 @@
       ]
     },
     {
-      "id": 17,
-      "name": "Río San Juan",
+      "pk_departamento": 17,
+      "nombre": "Río San Juan",
       "municipalities": [
         "El Almendro",
         "El Castillo",

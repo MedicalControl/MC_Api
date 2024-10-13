@@ -7,47 +7,91 @@ import { BadRequestException } from "../exceptions/bad-request";
 import { ErrorCode } from "../exceptions/root";
 import { signUpSchema } from "../schemas";
 import { NotFoundException } from "../exceptions/not-found";
-import { user } from "@prisma/client";
+import { usuario } from "@prisma/client";
 
+interface medico {
+  nombres: string;
+  apellidos: string;
+  correo: string;
+  contrase_a: string;
+  fk_especialidad: number;
+  direccion: string;
+  telefono: string;
+}
+
+interface paciente {
+  correo: string;
+  contrase_a: string;
+  nombres: string;
+  direccion: string;
+  ocupacion: string;
+  apellidos: string;
+  nrocedula: string;
+  telefono: string;
+  fechanacimiento: string;
+  sexo: boolean;
+  fk_departamento: number;
+  pk_municipio: number;
+  estadocivil: string;
+  religion: string;
+  escolaridad: string;
+}
 
 declare module "express" {
   interface Request {
-    user?: user;
+    user?: usuario;
   }
 }
 
 const medicalRecord_Create = (municipalityid: any, districtid: any) =>
   String(municipalityid + districtid);
 
-export const medical_create = async (req: Request, res: Response, next: NextFunction) => {
-  const {name, lastname, healthunitid, specialityid, email, password} = req.body;
-  let user = await prismaClient.user.findFirst({where: {email}});
+export const medical_create = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const {
+    nombres,
+    apellidos,
+    correo,
+    contrase_a,
+    direccion,
+    telefono,
+    fk_especialidad,
+  }: medico = req.body;
+
+  let user = await prismaClient.usuario.findFirst({ where: { correo } });
   let medical;
   if (user)
-      next(new BadRequestException("User already exists!", ErrorCode.USER_ALREADY_EXIST));
+    next(
+      new BadRequestException(
+        "User already exists!",
+        ErrorCode.USER_ALREADY_EXIST
+      )
+    );
 
-  medical = await prismaClient.medical.create({
-    data:{
-      name, 
-      lastname, 
-      user: {
+  medical = await prismaClient.doctor.create({
+    data: {
+      nombres,
+      apellidos,
+      direccion,
+      telefono,
+
+      usuario: {
         create: {
-          password: hashSync(password, JWT_ROUND),
-          email,
-          role: 'ADMIN'
+          contrase_a: hashSync(contrase_a, JWT_ROUND),
+          correo,
+          rol: "DOCTOR",
         },
       },
-      healthunit: {
-        connect: {id: healthunitid}
-      }, 
-      speciality: {
-        connect: {id: specialityid}
-      }, 
-    }
-  })
+      especialidad: {
+        connect: { pk_especialidad: fk_especialidad },
+      },
+    },
+  });
   res.json(medical);
 };
-
 
 export const signup = async (
   req: Request,
@@ -56,23 +100,24 @@ export const signup = async (
 ) => {
   signUpSchema.parse(req.body);
   const {
-    email,
-    password,
-    name,
-    address,
-    ocupation,
-    bloodType,
-    lastname,
-    idCard,
-    number,
-    birthDate,
-    inssnumber,
-    sex,
-    districtid,
-    municipalityid,
-  } = req.body;
-  const birthDateC = new Date(birthDate);
-  let user = await prismaClient.user.findFirst({ where: { email } });
+    correo,
+    contrase_a,
+    nombres,
+    direccion,
+    ocupacion,
+    apellidos,
+    nrocedula,
+    telefono,
+    fechanacimiento,
+    sexo,
+    fk_departamento,
+    pk_municipio,
+    estadocivil,
+    religion,
+    escolaridad,
+  }: paciente = req.body;
+  const birthDateC = new Date(fechanacimiento);
+  let user = await prismaClient.usuario.findFirst({ where: { correo } });
   let patient;
   if (user)
     next(
@@ -81,55 +126,59 @@ export const signup = async (
         ErrorCode.USER_ALREADY_EXIST
       )
     );
-  patient = await prismaClient.patient.create({
+  patient = await prismaClient.paciente.create({
     data: {
-      name,
-      lastname,
-      address,
-      birthDate: birthDateC,
-      bloodType,
-      ocupation,
-      inssnumber,
-      idCard,
-      sex,
-      number,
-      user: {
+      nombres,
+      apellidos,
+      direccion,
+      fechanacimiento,
+      ocupacion,
+      nrocedula,
+      estadocivil,
+      escolaridad,
+      sexo,
+      religion,
+      telefono,
+      pacienteusuario: {
         create: {
-          password: hashSync(password, JWT_ROUND),
-          email,
+          usuario: {
+            create: {
+              contrase_a: hashSync(contrase_a, JWT_ROUND),
+              correo,
+            },
+          },
         },
       },
-      municipality: {
-        connect: { id: municipalityid },
-      },
-      district: {
-        connect: { id: districtid },
+      municipio: {
+        connect: {
+          pk_municipio,
+          fk_departamento,
+        },
       },
     },
   });
   res.json(patient);
 };
 
-
 export const login = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { email, password } = req.body;
+  const { correo, contrase_a } = req.body;
 
-  let user = await prismaClient.user.findFirst({ where: { email } });
+  let user = await prismaClient.usuario.findFirst({ where: { correo } });
   console.log(user);
   if (!user)
     throw new NotFoundException("User not found", ErrorCode.USER_NOT_FOUND);
-  if (!compareSync(password, user.password))
+  if (!compareSync(contrase_a, user.contrase_a))
     throw new BadRequestException(
       "Incorrect password!",
       ErrorCode.INCORRECT_PASSWORD
     );
   const token = jwt.sign(
     {
-      userId: user.id,
+      userId: user.pk_usuario,
     },
     JWT_SECRET
   );

@@ -5,7 +5,7 @@ import { ErrorCode } from "../exceptions/root";
 
 const adminMiddleWare = async(req: Request, res: Response, next: NextFunction) => {
     const user = req.user
-    if (user?.role == "ADMIN")
+    if (user?.rol == "DOCTOR")
         next()
     else
         next(new UnauthorizedException('Unauthorized', ErrorCode.UNAUTHORIZED))
