@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { schedule } from "../appointmet/appointment";
+import { schedule } from "../controllers/appointmet/appointment";
 import { medicosMiddleWare } from "../middlewares/admin";
 import authMiddleware from '../middlewares/auth';
-import { listmedicalRecord } from "../patient/medicalrecord";
+import { listmedicalRecord } from "../controllers/patient/medicalrecord";
 
 
 const medicalRoutes: Router = Router()

@@ -14,7 +14,6 @@ export const adminMiddleWare = async(req: Request, res: Response, next: NextFunc
 
 export const medicosMiddleWare = async(req: Request, res: Response, next: NextFunction) => {
     const user = req.user;
-    console.log(user);
     if(user?.rol == "DOCTOR")
         next()
     else 

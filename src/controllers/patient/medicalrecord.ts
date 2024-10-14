@@ -1,6 +1,6 @@
-import { prismaClient } from "../index";
+import { prismaClient } from "../../index";
 import { Request, Response, NextFunction } from "express";
-import { medicalRecordSchema } from "../schemas";
+import { medicalRecordSchema } from "../../schemas";
 import { ZodError } from "zod";
 
 interface medicalRecord {

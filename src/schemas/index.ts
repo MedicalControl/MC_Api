@@ -73,3 +73,10 @@ export const consultationSchema = z.object({
 export const medicalRecordSchema = z.object({
   numero: z.string()
 })
+
+export const createAppointmentDoctoSchema = z.object({
+  fecha: z.string(),
+  hora: z.string(),
+  cedula: z.string()
+
+})

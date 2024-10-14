@@ -16,9 +16,8 @@ model administrador {
 
 model agendacita {
   pk_agendacita Int      @id @default(autoincrement())
-  fecha         DateTime @db.Date
-  hora          DateTime @db.Time(6)
-  estado        String   @db.VarChar(10)
+  fechahora        DateTime 
+  estado        estado @default(Revision)
   fk_paciente   Int
   fk_doctor     Int
   doctor        doctor   @relation(fields: [fk_doctor], references: [pk_doctor], onDelete: NoAction, onUpdate: NoAction)
@@ -216,4 +215,11 @@ enum rol {
   USER
   DOCTOR
   ADMIN
+}
+
+enum estado {
+  Pendiente
+  Cancelado
+  Realizado
+  Revision
 }
