@@ -64,6 +64,8 @@ export const schedule = async (
         console.log(err);
       });
 
+      
+
     res.json("shedule");
   } catch (error) {
     if (error instanceof ZodError) {
