@@ -5,7 +5,8 @@ import * as jwt from "jsonwebtoken";
 import { JWT_ROUND, JWT_SECRET } from "../../config";
 import { BadRequestException } from "../../exceptions/bad-request";
 import { ErrorCode } from "../../exceptions/root";
-import { signUpSchemaMedicalToPatiente } from "../../schemas";
+import { signupMedicalSchema, signUpSchemaMedicalToPatiente } from "../../schemas";
+
 
 interface paciente {
   nombres: string;
@@ -78,11 +79,12 @@ export const signup_patient = async (
   res.json(patient);
 };
 
-export const medical_create = async (
+export const signup_medical = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  signupMedicalSchema.parse(req.body);
   const {
     nombres,
     apellidos,

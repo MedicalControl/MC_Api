@@ -2,7 +2,7 @@ import { Router } from "express";
 import { errorHandler } from "../exceptions/error-handler";
 import { createMedicine, listMedicineToPatient } from "../controllers/medicine";
 import authMiddleware from "../middlewares/auth";
-import adminMiddleWare from "../middlewares/admin";
+import {adminMiddleWare} from "../middlewares/admin";
 
 const medicineRoutes: Router = Router()
 

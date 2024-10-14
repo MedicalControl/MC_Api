@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { signup } from '../controllers/auth/auth.patient'
 import { login, me } from '../controllers/auth/auth'
-import { medical_create, signup_patient } from '../controllers/auth/auth.medical'
+import { signup_medical, signup_patient } from '../controllers/auth/auth.medical'
 import { errorHandler } from '../exceptions/error-handler'
 import authMiddleware from '../middlewares/auth'
 
@@ -207,3 +207,4 @@ authRoutes.post('/signup', errorHandler(signup))
 
 
 authRoutes.post('/medical/signup_patient', errorHandler(signup_patient))
+authRoutes.post('/medical/signup', errorHandler(signup_medical))

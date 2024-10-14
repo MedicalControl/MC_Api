@@ -1,4 +1,5 @@
 import {date, z} from 'zod'
+import { signup } from '../controllers/auth/auth.patient';
 
 
 const dateSchema = z.string().superRefine((value, ctx) => {
@@ -9,6 +10,12 @@ const dateSchema = z.string().superRefine((value, ctx) => {
       });
     }
   });
+
+
+export const loginSchema = z.object({
+  correo: z.string().email(),
+  contrasena: z.string()
+})
 
 export const signUpSchemaMedicalToPatiente = z.object({
     nombres: z.string().max(50),
@@ -27,7 +34,18 @@ export const signUpSchemaMedicalToPatiente = z.object({
     nombremad: z.string().max(50).optional(),
     nombrepad: z.string().max(50).optional(),
 })
+
  
+export const signupMedicalSchema = z.object({
+  nombres: z.string(),
+  apellidos: z.string(),
+  correo: z.string(),
+  contraseña: z.string(),
+  fk_especialidad: z.number(),
+  direccion: z.string(),
+  telefono: z.string()
+})
+
 export const signUpSchema = z.object({
   nombres: z.string().max(50),
   apellidos: z.string().max(50), 
@@ -46,16 +64,12 @@ export const signUpSchema = z.object({
   nombrepad: z.string().max(50).optional(),
 })
 
-export const signupMedicalSchema = z.object({
-  name: z.string(), 
-  lastname: z.string(),
-  healthunitid: z.number(), 
-  specialityid: z.number(),
-  email: z.string().email(), 
-  password: z.string().min(6), 
-})
 export const consultationSchema = z.object({
   plan: z.string(), 
   reasonsConsultation: z.string(), 
   medicalRecordId: z.number()
+})
+
+export const medicalRecordSchema = z.object({
+  numero: z.string()
 })
