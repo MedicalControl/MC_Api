@@ -1,8 +1,9 @@
 import { prismaClient } from "../../index";
 import { Request, Response, NextFunction } from "express";
-import { createAppointmentDoctoSchema } from "../../schemas";
+import { attendSchema, createAppointmentDoctoSchema } from "../../schemas";
 import { date, ZodError } from "zod";
 import { usuario } from "@prisma/client";
+import { randomBytes } from "crypto";
 
 interface appointmentnext {
   fecha: string;
@@ -75,7 +76,6 @@ export const schedule = async (
   }
 };
 
-
 export const get_appointment = async (
   req: Request,
   res: Response,
@@ -95,11 +95,12 @@ export const get_appointment = async (
     },
     select: {
       estado: true,
+      pk_agendacita: true,
       paciente: {
         select: {
           nombres: true,
+          apellidos: true,
           nrocedula: true,
-
           expediente: {
             select: {
               nroexpediente: true,
@@ -110,4 +111,72 @@ export const get_appointment = async (
     },
   });
   res.json(appointmentData);
+};
+
+export const attend_appointment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  interface attendData {
+    fk_agendacita: number;
+    motivo: string;
+    sintomas: string;
+    diagnostico: string;
+    indicaciones: string;
+  }
+  try {
+    const {
+      fk_agendacita,
+      motivo,
+      sintomas,
+      diagnostico,
+      indicaciones,
+    }: attendData = attendSchema.parse(req.body);
+
+    const getPatientid = await prismaClient.agendacita.findFirst({
+      where: {
+        pk_agendacita: fk_agendacita,
+      },
+      select: {
+        fk_paciente: true,
+      },
+    });
+
+    if (!getPatientid) return res.send(Error);
+
+    const verifyMedicalRecord = await prismaClient.expediente.findFirst({
+      where: {
+        fk_paciente: getPatientid.fk_paciente,
+      },
+    });
+
+    if (!verifyMedicalRecord) {
+      await prismaClient.expediente.create({
+        data: {
+          nroexpediente: randomBytes(4).toString("hex"),
+          fk_paciente: getPatientid.fk_paciente,
+        },
+      });
+
+      const attendData = await prismaClient.cita.create({
+        data: {
+          fk_agendacita,
+          motivo,
+          sintomas,
+          diagnostico,
+          indicaciones,
+          fk_expediente: 1,
+        },
+      });
+    }
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return res.status(400).json({
+        message: "Error de validación",
+        issues: error.errors,
+      });
+    }
+    next(error);
+  }
 };
