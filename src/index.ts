@@ -1,23 +1,25 @@
-import express, {Express, Request, Response} from 'express'
-import { PORT  } from './config';
-import rootRouter from './routes'
-import { PrismaClient } from '@prisma/client'
-import { errrorMidleware } from './middlewares/errors'
-import swaggerUi from 'swagger-ui-express'
-import swaggerSpec from './documentation/swagger'
+// src/index.ts
+import express, { Express } from 'express';
+import { PORT } from './config';
+import rootRouter from './routes';
+import { PrismaClient } from '@prisma/client';
+import { errorMiddleware } from './middlewares/errors';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './documentation/swagger';
 
+const app: Express = express();
 
+app.use(express.json());
 
-const app:Express = express()
-
-app.use(express.json())
-
-app.use('/api', rootRouter)
+app.use('/api', rootRouter);
 
 export const prismaClient = new PrismaClient({
-    log:['query']
-})
+    log: ['query'],
+});
 
-app.use(errrorMidleware)
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
-app.listen(PORT, () => {console.log(`App workinh on port ${PORT}`)})
+app.use(errorMiddleware);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.listen(PORT, () => {
+    console.log(`App working on port ${PORT}`);
+});
