@@ -13,6 +13,7 @@ rootRouter.use('/district', district_medicineRouter)
 rootRouter.use('/consultation', consultationRoutes )
 rootRouter.use('/app', medicalRoutes)
 
+
 export default rootRouter;
 
 
