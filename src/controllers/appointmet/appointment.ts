@@ -74,3 +74,40 @@ export const schedule = async (
     next(error);
   }
 };
+
+
+export const get_appointment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const primaryKeyDoctor = await prismaClient.doctor.findFirst({
+    where: {
+      fk_usuario: req.user?.pk_usuario,
+    },
+    select: {
+      pk_doctor: true,
+    },
+  });
+  const appointmentData = await prismaClient.agendacita.findMany({
+    where: {
+      fk_doctor: primaryKeyDoctor?.pk_doctor,
+    },
+    select: {
+      estado: true,
+      paciente: {
+        select: {
+          nombres: true,
+          nrocedula: true,
+
+          expediente: {
+            select: {
+              nroexpediente: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  res.json(appointmentData);
+};
