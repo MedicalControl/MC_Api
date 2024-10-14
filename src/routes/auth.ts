@@ -7,8 +7,6 @@ import authMiddleware from '../middlewares/auth'
 
 
 const authRoutes: Router = Router()
-
-
 /**
  * @swagger
  * /api/auth/login:

@@ -1,9 +1,9 @@
 import { Router } from "express";
 import authRoutes from './auth'
 import medicineRoutes from "./medicine";
-import district_medicineRouter from "./district-municipality";
+import district_medicineRouter from "./patient";
 import consultationRoutes from "./consultation";
-import appointmetsRoutes from "./appointmet";
+import medicalRoutes from "./medical";
 
 const rootRouter: Router = Router()
 
@@ -11,7 +11,7 @@ rootRouter.use('/auth', authRoutes)
 rootRouter.use('/medicine', medicineRoutes)
 rootRouter.use('/district', district_medicineRouter)
 rootRouter.use('/consultation', consultationRoutes )
-rootRouter.use('/app', appointmetsRoutes)
+rootRouter.use('/app', medicalRoutes)
 
 export default rootRouter;
 
