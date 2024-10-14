@@ -16,7 +16,7 @@ const medicalRoutes: Router = Router()
 
 /**
  * @swagger
- * api/app/appointment:
+ * /api/app/appointment:
  *   post:
  *     summary: Programa una nueva cita médica
  *     tags: [Medical]
@@ -58,7 +58,7 @@ medicalRoutes.post('/appointment', [authMiddleware, medicosMiddleWare], schedule
 
 /**
  * @swagger
- * api/app/appointment:
+ * /api/app/appointment:
  *   get:
  *     summary: Obtiene todas las citas programadas de un médico
  *     tags: [Medical]
@@ -107,7 +107,7 @@ medicalRoutes.get('/appointment', [authMiddleware, medicosMiddleWare], get_appoi
 
 /**
  * @swagger
- * api/app/attendappointment:
+ * /api/app/attendappointment:
  *   post:
  *     summary: Registra la asistencia a una cita
  *     tags: [Medical]
@@ -149,7 +149,7 @@ medicalRoutes.post('/attendappointment', [authMiddleware, medicosMiddleWare], at
 
 /**
  * @swagger
- * api/app/medicalRecord:
+ * /api/app/medicalRecord:
  *   get:
  *     summary: Lista el registro médico de los pacientes
  *     tags: [Medical]
