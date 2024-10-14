@@ -7,6 +7,6 @@ import { JWT_ROUND } from '../../src/config';
 const user: Prisma.usuarioCreateInput[] = [
     {
         correo:"",
-        contrase_a: hashSync("", JWT_ROUND)
+        contrasena: hashSync("", JWT_ROUND)
     }
 ]
