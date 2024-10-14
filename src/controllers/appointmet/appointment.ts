@@ -169,6 +169,15 @@ export const attend_appointment = async (
           fk_expediente: 1,
         },
       });
+      await prismaClient.agendacita.update({
+        where: {
+          pk_agendacita: fk_agendacita, 
+        },
+        data: {
+          estado: "Realizado",
+        },
+      });
+      res.json(attendData);
     }
   } catch (error) {
     if (error instanceof ZodError) {
