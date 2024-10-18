@@ -64,8 +64,6 @@ export const schedule = async (
         console.log(err);
       });
 
-      
-
     res.json("shedule");
   } catch (error) {
     if (error instanceof ZodError) {
@@ -168,12 +166,14 @@ export const attend_appointment = async (
           sintomas,
           diagnostico,
           indicaciones,
+          
           fk_expediente: 1,
+          
         },
       });
       await prismaClient.agendacita.update({
         where: {
-          pk_agendacita: fk_agendacita, 
+          pk_agendacita: fk_agendacita,
         },
         data: {
           estado: "Realizado",

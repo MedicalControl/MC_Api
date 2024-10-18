@@ -10,5 +10,5 @@ export default function main () {
         }
     ).then((res) => {
         console.log(res.data.token)
-    })
+    }).catch((err) => {console.log(err)})
 }
