@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { signup } from '../controllers/auth/auth.patient'
-import { login, me } from '../controllers/auth/auth'
+import { login, login_medical, me } from '../controllers/auth/auth'
 import { signup_medical, signup_patient } from '../controllers/auth/auth.medical'
 import { errorHandler } from '../exceptions/error-handler'
 import authMiddleware from '../middlewares/auth'
@@ -77,6 +77,7 @@ const authRoutes: Router = Router()
  *                   example: "Error al iniciar sesión."
  */
 authRoutes.post('/login', errorHandler(login))
+authRoutes.post('/login_medical', errorHandler(login_medical))
 
 authRoutes.get('/me', [authMiddleware], errorHandler(me))
 

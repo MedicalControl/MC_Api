@@ -17,7 +17,7 @@ export const login = async (
   const { correo, contrasena } = req.body;
 
   let user = await prismaClient.usuario.findFirst({ where: { correo } });
-  if (!user)
+  if (!user || user.rol == "DOCTOR" || user.rol == "ADMIN")
     throw new NotFoundException("User not found", ErrorCode.USER_NOT_FOUND);
   if (!compareSync(contrasena, user.contrasena))
     throw new BadRequestException(
@@ -34,6 +34,27 @@ export const login = async (
   res.json({ token });
 };
 
+export const login_medical = async (req: Request, res: Response) => {
+  loginSchema.parse(req.body);
+  const { correo, contrasena } = req.body;
+
+  let user = await prismaClient.usuario.findFirst({ where: { correo } });
+  if (!user || user.rol == "USER" || user.rol == "ADMIN")
+    throw new NotFoundException("User not found", ErrorCode.USER_NOT_FOUND);
+  if (!compareSync(contrasena, user.contrasena))
+    throw new BadRequestException(
+      "Incorrect password!",
+      ErrorCode.INCORRECT_PASSWORD
+    );
+  const token = jwt.sign(
+    {
+      userId: user.pk_usuario,
+    },
+    JWT_SECRET
+  );
+
+  res.json({ token });
+};
 export const me = async (req: Request, res: Response, next: NextFunction) => {
   res.json(req.user);
 };
