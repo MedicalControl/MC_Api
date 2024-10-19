@@ -8,5 +8,6 @@ patientRoutes.get('/', errorHandler(listDistrict))
 patientRoutes.get('/Municipality/:id', errorHandler(listMunicipalityByDistrict))
 
 
+
 export default patientRoutes;
 

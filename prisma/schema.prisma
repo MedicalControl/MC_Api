@@ -173,7 +173,7 @@ model pacienteusuario {
 }
 
 model recetamedica {
-  pk_recetamedica   Int                 @id(map: "recetamedica_pk")
+  pk_recetamedica   Int                 @id(map: "recetamedica_pk") @default(autoincrement())
   fk_cita           Int
   cita              cita                @relation(fields: [fk_cita], references: [pk_cita], onDelete: NoAction, onUpdate: NoAction, map: "recetamedica_cita_fk")
   recetatratamiento recetatratamiento[]

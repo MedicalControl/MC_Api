@@ -6,9 +6,10 @@ import { PrismaClient } from '@prisma/client';
 import { errorMiddleware } from './middlewares/errors';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './documentation/swagger';
-import main from './use.example';
-
+import cors from 'cors'
 const app: Express = express();
+
+app.use(cors());
 
 app.use(express.json());
 

@@ -10,6 +10,7 @@ const dateSchema = z.string().superRefine((value, ctx) => {
   }
 });
 
+
 export const loginSchema = z.object({
   correo: z.string().email(),
   contrasena: z.string(),

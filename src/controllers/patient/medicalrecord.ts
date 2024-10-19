@@ -13,7 +13,6 @@ export const listmedicalRecord = async (
   next: NextFunction
 ) => {
     try {
-        console.log(req.body); // Verificar la estructura de req.body
         const { numero }: medicalRecord = medicalRecordSchema.parse(req.body);
     
         const medicalRecordData = await prismaClient.expediente.findMany({
